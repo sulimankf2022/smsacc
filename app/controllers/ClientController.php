@@ -56,7 +56,7 @@ function controller_clients_index(): void {
         SELECT c.*,
             COALESCE(SUM(CASE WHEN ct.type='invoice' THEN ct.base_amount ELSE 0 END),0) as total_invoiced,
             COALESCE(SUM(CASE WHEN ct.type='payment' THEN ct.base_amount ELSE 0 END),0) as total_paid,
-            COALESCE(SUM(CASE WHEN ct.type='invoice' THEN ct.base_amount WHEN ct.type IN ('payment','adjustment_credit') THEN -ct.base_amount ELSE ct.base_amount END),0) as balance,
+            COALESCE(SUM(CASE WHEN ct.type IN ('invoice','adjustment_debit') THEN ct.base_amount WHEN ct.type IN ('payment','adjustment_credit') THEN -ct.base_amount ELSE 0 END),0) as balance,
             MAX(ct.transaction_date) as last_transaction
         FROM clients c
         LEFT JOIN client_transactions ct ON ct.client_id=c.id AND ct.tenant_id=c.tenant_id

@@ -12,7 +12,12 @@ document.addEventListener('DOMContentLoaded', function () {
     // Exchange rate auto-fill from currency select
     document.querySelectorAll('[data-currency-select]').forEach(function (sel) {
         sel.addEventListener('change', function () {
-            const rates = JSON.parse(document.getElementById('currency-rates-data')?.textContent || '{}');
+            const ratesEl = document.getElementById('currency-rates-data');
+            if (!ratesEl) {
+                console.warn('currency-rates-data element not found; exchange rate auto-fill unavailable.');
+                return;
+            }
+            const rates = JSON.parse(ratesEl.textContent || '{}');
             const rateInput = document.querySelector('[data-exchange-rate]');
             if (rateInput && rates[this.value]) {
                 rateInput.value = rates[this.value];

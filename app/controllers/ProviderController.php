@@ -57,7 +57,7 @@ function controller_providers_index(): void {
         SELECT p.*,
             COALESCE(SUM(CASE WHEN pt.type='receivable' THEN pt.base_amount ELSE 0 END),0) as total_receivable,
             COALESCE(SUM(CASE WHEN pt.type='payment' THEN pt.base_amount ELSE 0 END),0) as total_paid,
-            COALESCE(SUM(CASE WHEN pt.type='receivable' THEN pt.base_amount WHEN pt.type IN ('payment','adjustment_credit') THEN -pt.base_amount ELSE pt.base_amount END),0) as balance,
+            COALESCE(SUM(CASE WHEN pt.type IN ('receivable','adjustment_debit') THEN pt.base_amount WHEN pt.type IN ('payment','adjustment_credit') THEN -pt.base_amount ELSE 0 END),0) as balance,
             MAX(pt.transaction_date) as last_transaction
         FROM providers p
         LEFT JOIN provider_transactions pt ON pt.provider_id=p.id AND pt.tenant_id=p.tenant_id
