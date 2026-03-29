@@ -1,1 +1,5 @@
 database/smsacc.db
+database/*.db
+*.log
+.DS_Store
+Thumbs.db
